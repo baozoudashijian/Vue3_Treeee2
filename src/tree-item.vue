@@ -1,8 +1,11 @@
 <script setup>
-import {ref} from "vue";
+import {computed, onMounted, ref} from "vue";
+import {notifyParentOfSelection} from "./hooks/traversal.ts";
 
-const props = defineProps(['item'])
-const chevron = ref < HTMLSpanElement > (null);
+const props = defineProps(['item', 'treeState', 'parent'])
+const chevron = ref(null);
+const checkbox = ref();
+
 const toggleExpand = (e) => {
   chevron.value?.classList.toggle("rotate-90");
   const element = document.getElementById(props.item.id).getElementsByClassName('node-child')
@@ -10,6 +13,15 @@ const toggleExpand = (e) => {
   if(!element || !element[0]) return
   element[0].classList.toggle('hide')
 }
+const updateCheckState = () => {
+  props.item.checkedStatus = checkbox.value?.checked == true ? 'true' : 'false'
+  props.treeState.emitItemCheckedChange(props.item)
+  notifyParentOfSelection(props.item, props.treeState)
+}
+
+onMounted(() => {
+  props.treeState?.trackNode(props.item, props.parent)
+})
 </script>
 
 <template>
@@ -21,7 +33,10 @@ const toggleExpand = (e) => {
         @click="toggleExpand"
     >
     </span>
-    <span>{{ item.name }}</span>
+    <div class="pointer">
+      <input ref="checkbox" type="checkbox" @change="updateCheckState">
+      <span>{{ item.name }}</span>
+    </div>
   </div>
 </template>
 <style scoped>
