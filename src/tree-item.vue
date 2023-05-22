@@ -1,6 +1,6 @@
 <script setup>
-import {computed, onMounted, ref} from "vue";
-import {notifyParentOfSelection} from "./hooks/traversal.ts";
+import { onMounted, ref, watch} from "vue";
+import {notifyParentOfSelection, cascadeStateToDescendants} from "./hooks/traversal.ts";
 
 const props = defineProps(['item', 'treeState', 'parent'])
 const chevron = ref(null);
@@ -17,7 +17,21 @@ const updateCheckState = () => {
   props.item.checkedStatus = checkbox.value?.checked == true ? 'true' : 'false'
   props.treeState.emitItemCheckedChange(props.item)
   notifyParentOfSelection(props.item, props.treeState)
+  cascadeStateToDescendants(props.item, props.treeState)
 }
+watch(
+    () => props.item.checkedStatus,
+    () => {
+      if (props.item.checkedStatus == 'indeterminate') {
+        checkbox.value.indeterminate = true;
+      }
+      else
+      {
+        checkbox.value.indeterminate = false;
+        checkbox.value.checked = props.item.checkedStatus == true || props.item.checkedStatus == "true" ? true : false
+      }
+    }
+);
 
 onMounted(() => {
   props.treeState?.trackNode(props.item, props.parent)
