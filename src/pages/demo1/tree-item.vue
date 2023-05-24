@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, watch} from "vue";
-import {notifyParentOfSelection, cascadeStateToDescendants} from "./hooks/traversal.ts";
+import {notifyParentOfSelection, cascadeStateToDescendants} from "../../hooks/traversal.ts";
 
 const props = defineProps(['item', 'treeState', 'parent'])
 const chevron = ref(null);

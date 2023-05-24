@@ -1,7 +1,7 @@
 <script setup>
 import {ref, useAttrs, computed} from "vue";
 import TreeItem from "./tree-item.vue";
-import {useGraph} from "./hooks/graph.ts";
+import {useGraph} from "../../hooks/graph.ts";
 
 const props = defineProps(['items', 'treeState'])
 const emits = defineEmits(['update:checkedItems', 'onCheck'])
