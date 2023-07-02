@@ -12,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../pages/demo2/demo2.vue"),
     },
     {
+        path: "/demo3",
+        name: "demo3",
+        component: () => import("../pages/demo3/demo3.vue"),
+    },
+    {
         path: "/:catchAll(.*)",
         redirect: "/error"
     },
